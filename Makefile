@@ -13,6 +13,9 @@ TAG ?= $(REPO)/minio:$(VERSION)
 DOCKER_PLATFORMS ?= linux/$(GOARCH)
 DOCKER_OUTPUT ?= --load
 
+# mc shipped in the image and used by functional tests.
+MC_IMAGE ?= ghcr.io/pixel365/mc:RELEASE.2026-10-07T07-29-18Z
+
 GOLANGCI_DIR = .bin/golangci/$(GOLANGCI_VERSION)
 GOLANGCI = $(GOLANGCI_DIR)/golangci-lint
 
@@ -197,7 +200,16 @@ docker: docker-vars ## builds minio docker image from source
 		--build-arg LDFLAGS="$(LDFLAGS)" \
 		--build-arg VERSION="$(VERSION)" \
 		--build-arg REVISION="$(shell git rev-parse HEAD)" \
+		--build-arg MC_IMAGE="$(MC_IMAGE)" \
 		$(addprefix -t ,$(TAG)) -f Dockerfile .
+
+# Test scripts look for mc in ./mc or /tmp/mc before trying to download it
+# from dl.min.io, which no longer exists.
+getmc: ## extracts mc from MC_IMAGE into ./mc and /tmp/mc for functional tests
+	@echo "Extracting mc from '$(MC_IMAGE)'"
+	@id=$$(docker create --platform linux/$(GOARCH) $(MC_IMAGE)) && \
+		{ docker cp -q $$id:/usr/bin/mc $(PWD)/mc; rc=$$?; docker rm $$id >/dev/null; exit $$rc; }
+	@cp -f $(PWD)/mc /tmp/mc
 
 test-resiliency: build
 	@echo "Running resiliency tests"

@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - master
+      - develop
 
 # This ensures that previous jobs for the PR are canceled when the PR is
 # updated.
@@ -29,6 +30,9 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
           check-latest: true
+      - name: Get mc
+        run: make getmc
+
       - name: Test Decom
         run: |
           sudo sysctl net.ipv6.conf.all.disable_ipv6=0

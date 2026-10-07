@@ -3,10 +3,12 @@ on:
   pull_request:
     branches:
       - master
+      - develop
 
   push:
     branches:
       - master
+      - develop
 
 permissions:
   contents: read # to fetch code (actions/checkout)

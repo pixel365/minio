@@ -1,0 +1,73 @@
+name: Docker
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+    tags:
+      - 'RELEASE.*'
+
+# This ensures that previous jobs for the PR are canceled when the PR is
+# updated.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REPO: ghcr.io/${{ github.repository_owner }}
+  DOCKER_PLATFORMS: linux/amd64,linux/arm64
+
+jobs:
+  image:
+    name: Build and publish image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          # Tags are required to compute the release version.
+          fetch-depth: 0
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        if: github.event_name == 'push'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        if: github.event_name == 'pull_request'
+        run: make docker DOCKER_OUTPUT="--output type=cacheonly"
+
+      - name: Publish edge
+        if: github.event_name == 'push' && github.ref_type == 'branch'
+        run: |
+          make docker DOCKER_OUTPUT=--push \
+            TAG="${REPO}/minio:edge ${REPO}/minio:$(git describe --tags)"
+
+      - name: Publish release
+        if: github.event_name == 'push' && github.ref_type == 'tag'
+        run: |
+          # Images are published from master only.
+          if ! git merge-base --is-ancestor "$GITHUB_SHA" origin/master; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not point to a commit on master"
+            exit 1
+          fi
+          make docker DOCKER_OUTPUT=--push \
+            TAG="${REPO}/minio:${GITHUB_REF_NAME} ${REPO}/minio:latest"
