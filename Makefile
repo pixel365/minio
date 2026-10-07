@@ -6,8 +6,12 @@ GOOS ?= $(shell go env GOOS)
 GOARCH ?= $(shell go env GOARCH)
 
 VERSION ?= $(shell git describe --tags)
-REPO ?= quay.io/minio
+REPO ?= ghcr.io/pixel365
+# Space separated list of image references.
 TAG ?= $(REPO)/minio:$(VERSION)
+
+DOCKER_PLATFORMS ?= linux/$(GOARCH)
+DOCKER_OUTPUT ?= --load
 
 GOLANGCI_DIR = .bin/golangci/$(GOLANGCI_VERSION)
 GOLANGCI = $(GOLANGCI_DIR)/golangci-lint
@@ -211,9 +215,20 @@ docker-hotfix: hotfix-push checks ## builds minio docker container with hotfix t
 	@echo "Building minio docker image '$(TAG)'"
 	@docker build -q --no-cache -t $(TAG) --build-arg RELEASE=$(VERSION) . -f Dockerfile.hotfix
 
-docker: build ## builds minio docker container
+# A commit tagged RELEASE.* is built as that release, any other commit as
+# DEVELOPMENT.<commit time>.
+docker-vars:
+	$(eval RELEASE_TAG := $(shell git describe --tags --exact-match --match 'RELEASE.*' 2>/dev/null))
+	$(if $(RELEASE_TAG),$(eval LDFLAGS := $(shell MINIO_RELEASE="RELEASE" go run buildscripts/gen-ldflags.go $(shell echo $(RELEASE_TAG) | \
+    sed 's#RELEASE\.\([0-9]\+\)-\([0-9]\+\)-\([0-9]\+\)T\([0-9]\+\)-\([0-9]\+\)-\([0-9]\+\)Z#\1-\2-\3T\4:\5:\6Z#'))))
+
+docker: docker-vars ## builds minio docker image from source
 	@echo "Building minio docker image '$(TAG)'"
-	@docker build -q --no-cache -t $(TAG) . -f Dockerfile
+	@docker buildx build $(DOCKER_OUTPUT) --platform $(DOCKER_PLATFORMS) \
+		--build-arg LDFLAGS="$(LDFLAGS)" \
+		--build-arg VERSION="$(VERSION)" \
+		--build-arg REVISION="$(shell git rev-parse HEAD)" \
+		$(addprefix -t ,$(TAG)) -f Dockerfile .
 
 test-resiliency: build
 	@echo "Running resiliency tests"

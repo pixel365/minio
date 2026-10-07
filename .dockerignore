@@ -15,3 +15,7 @@ docs/debugging/healing-bin/healing-bin
 docs/debugging/inspect/inspect
 docs/debugging/pprofgoparser/pprofgoparser
 docs/debugging/reorder-disks/reorder-disks
+.bin
+vendor
+minio
+*.test
