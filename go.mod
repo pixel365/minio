@@ -8,6 +8,14 @@ tool (
 	golang.org/x/tools/cmd/stringer
 )
 
+replace github.com/minio/console => github.com/pixel365/minio-console-admin v0.0.0-20260916095431-91be21bb083a
+
+replace goftp.io/server/v2 => github.com/pixel365/goftp-server/v2 v2.0.1
+
+replace github.com/minio/mc => github.com/pixel365/minio-mc v0.0.0-20261007072530-5f2f7d7c8bb0
+
+replace github.com/pgsty/silo-pkg/v3 => github.com/pixel365/minio-pkg/v3 v3.14.1
+
 require (
 	aead.dev/mtls v0.2.1
 	cloud.google.com/go/storage v1.56.0
@@ -293,9 +301,3 @@ require (
 	google.golang.org/protobuf v1.36.12 // indirect
 	gopkg.in/ini.v1 v1.67.3 // indirect
 )
-
-replace github.com/minio/console => github.com/pixel365/minio-console-admin v0.0.0-20260916095431-91be21bb083a
-
-replace goftp.io/server/v2 => github.com/pixel365/goftp-server/v2 v2.0.1
-
-replace github.com/minio/mc => github.com/pixel365/minio-mc v0.0.0-20261007072530-5f2f7d7c8bb0
