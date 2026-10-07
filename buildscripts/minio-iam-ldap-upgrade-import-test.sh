@@ -27,12 +27,12 @@ __init__() {
 	export GOPATH=/tmp/gopath
 	export PATH="${PATH}":"${GOPATH}"/bin
 
-	if which mc &>/dev/null; then
-		echo "mc is already installed"
-	else
-		echo "Installing mc:"
-		go install github.com/minio/mc@latest
+	# mc comes from the fork release image, see `make getmc`.
+	if [ ! -x ./mc ]; then
+		make getmc
 	fi
+	mkdir -p "${GOPATH}"/bin
+	cp -a ./mc "${GOPATH}"/bin/mc
 
 	if [ ! -x ./minio.${OLD_VERSION} ]; then
 		echo "Downloading minio.${OLD_VERSION} binary"

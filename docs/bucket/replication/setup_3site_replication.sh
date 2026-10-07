@@ -46,12 +46,9 @@ unset MINIO_KMS_KES_KEY_FILE
 unset MINIO_KMS_KES_ENDPOINT
 unset MINIO_KMS_KES_KEY_NAME
 
-go install -v github.com/minio/mc@master
-cp -a $(go env GOPATH)/bin/mc ./mc
-
-if [ ! -f mc.RELEASE.2021-03-12T03-36-59Z ]; then
-	wget -q -O mc.RELEASE.2021-03-12T03-36-59Z https://dl.minio.io/client/mc/release/linux-amd64/archive/mc.RELEASE.2021-03-12T03-36-59Z &&
-		chmod +x mc.RELEASE.2021-03-12T03-36-59Z
+# mc comes from the fork release image, see `make getmc`.
+if [ ! -x ./mc ]; then
+	make getmc
 fi
 
 minio server --address 127.0.0.1:9001 "http://127.0.0.1:9001/tmp/multisitea/data/disterasure/xl{1...4}" \
@@ -194,8 +191,10 @@ fi
 sleep 5
 
 head -c 221227088 </dev/urandom >200M
-./mc.RELEASE.2021-03-12T03-36-59Z cp --config-dir ~/.mc --encrypt "sitea" --quiet 200M "sitea/bucket/200M-enc-v1"
-./mc.RELEASE.2021-03-12T03-36-59Z cp --config-dir ~/.mc --quiet 200M "sitea/bucket/200M-v1"
+# The v1 objects were uploaded with mc RELEASE.2021-03-12T03-36-59Z, whose
+# binary was only published on dl.min.io, which no longer exists.
+./mc cp --enc-s3 "sitea" --quiet 200M "sitea/bucket/200M-enc-v1"
+./mc cp --quiet 200M "sitea/bucket/200M-v1"
 
 ./mc cp --enc-s3 "sitea" --quiet 200M "sitea/bucket/200M-enc-v2"
 ./mc cp --quiet 200M "sitea/bucket/200M-v2"

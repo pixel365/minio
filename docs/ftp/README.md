@@ -41,7 +41,7 @@ MinIO supports following FTP/SFTP based protocols to access and manage data.
   - OpenID/OIDC service accounts
 
 - On versioned buckets, FTP/SFTP only operates on latest objects, if you need to retrieve
-  an older version you must use an `S3 API client` such as [`mc`](https://github.com/minio/mc).
+  an older version you must use an `S3 API client` such as [`mc`](https://github.com/pixel365/minio-mc).
 
 - All features currently used by your buckets will work as is without any changes
   - SSE (Server Side Encryption)

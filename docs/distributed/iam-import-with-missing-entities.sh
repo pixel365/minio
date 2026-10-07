@@ -10,8 +10,7 @@ rm -rf /tmp/ldap{1..4}
 rm -rf /tmp/ldap1{1..4}
 
 if [ ! -f ./mc ]; then
-	wget --quiet -O mc https://dl.minio.io/client/mc/release/linux-amd64/mc &&
-		chmod +x mc
+	make getmc
 fi
 
 mc -v

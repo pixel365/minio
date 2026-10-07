@@ -8,10 +8,10 @@ Start by forking the MinIO GitHub repository, make changes in a branch and then 
 
 ### Setup your MinIO GitHub Repository
 
-Fork [MinIO upstream](https://github.com/minio/minio/fork) source repository to your own personal repository. Copy the URL of your MinIO fork (you will need it for the `git clone` command below).
+Fork [MinIO upstream](https://github.com/pixel365/minio/fork) source repository to your own personal repository. Copy the URL of your MinIO fork (you will need it for the `git clone` command below).
 
 ```sh
-git clone https://github.com/minio/minio
+git clone https://github.com/pixel365/minio
 cd minio
 go install -v
 ls $(go env GOPATH)/bin/minio
@@ -21,7 +21,7 @@ ls $(go env GOPATH)/bin/minio
 
 ```sh
 $ cd minio
-$ git remote add upstream https://github.com/minio/minio
+$ git remote add upstream https://github.com/pixel365/minio
 $ git fetch upstream
 $ git merge upstream/master
 ...

@@ -9,8 +9,7 @@ rm -rf /tmp/xl
 rm -rf /tmp/xltier
 
 if [ ! -f ./mc ]; then
-	wget --quiet -O mc https://dl.minio.io/client/mc/release/linux-amd64/mc &&
-		chmod +x mc
+	make getmc
 fi
 
 export CI=true

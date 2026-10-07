@@ -1,17 +1,8 @@
-> [!NOTE]
-> **THIS REPOSITORY IS NO LONGER MAINTAINED.**
->
-> **Alternatives:**
-> - **[AIStor Free](https://min.io/download)** — Full-featured, standalone edition for community use (free license)
-> - **[AIStor Enterprise](https://min.io/pricing)** — Distributed edition with commercial support
-
----
-
 # MinIO Quickstart Guide
 
-[![Slack](https://slack.min.io/slack?type=svg)](https://slack.min.io) [![Docker Pulls](https://img.shields.io/docker/pulls/minio/minio.svg?maxAge=604800)](https://hub.docker.com/r/minio/minio/) [![license](https://img.shields.io/badge/license-AGPL%20V3-blue)](https://github.com/minio/minio/blob/master/LICENSE)
+[![license](https://img.shields.io/badge/license-AGPL%20V3-blue)](https://github.com/pixel365/minio/blob/master/LICENSE)
 
-[![MinIO](https://raw.githubusercontent.com/minio/minio/master/.github/logo.svg?sanitize=true)](https://min.io)
+[![MinIO](https://raw.githubusercontent.com/pixel365/minio/master/.github/logo.svg?sanitize=true)](https://min.io)
 
 MinIO is a high-performance, S3-compatible object storage solution released under the GNU AGPL v3.0 license.
 Designed for speed and scalability, it powers AI/ML, analytics, and data-intensive workloads with industry-leading performance.
@@ -59,7 +50,7 @@ Historical pre-compiled binary releases remain available for reference but are n
 ## Install from Source
 
 Use the following commands to compile and run a standalone MinIO server from source.
-If you do not have a working Golang environment, please follow [How to install Golang](https://golang.org/doc/install). Minimum version required is [go1.24](https://golang.org/dl/#stable)
+If you do not have a working Golang environment, please follow [How to install Golang](https://golang.org/doc/install). Minimum version required is [go1.27](https://golang.org/dl/#stable)
 
 ```sh
 go install github.com/minio/minio@latest
@@ -93,16 +84,31 @@ For application developers, see <https://docs.min.io/enterprise/aistor-object-st
 > Production environments using compiled-from-source MinIO binaries do so at their own risk.
 > The AGPLv3 license provides no warranties nor liabilities for any such usage.
 
-## Build Docker Image
+## Docker Image
 
-You can use the `docker build .` command to build a Docker image on your local host machine.
-You must first [build MinIO](#install-from-source) and ensure the `minio` binary exists in the project root.
+Images are published to the GitHub Container Registry for `linux/amd64` and `linux/arm64`:
 
-The following command builds the Docker image using the default `Dockerfile` in the root project directory with the repository and image tag `myminio:minio`
+- `ghcr.io/pixel365/minio:latest` – the latest release
+- `ghcr.io/pixel365/minio:RELEASE.<date>` – a specific release
+- `ghcr.io/pixel365/minio:edge` – the latest `master` build
 
 ```sh
-docker build -t myminio:minio .
+docker run -p 9000:9000 -p 9001:9001 ghcr.io/pixel365/minio server /data --console-address :9001
 ```
+
+The image also contains the MinIO Client `mc` and `curl` for health checks, e.g. `mc ready local`.
+
+## Build Docker Image
+
+The `Dockerfile` builds MinIO from source, no prebuilt binary is required.
+The following command builds the image for the host platform with version information taken from git and tags it as `ghcr.io/pixel365/minio:<version>`:
+
+```sh
+make docker
+```
+
+Use `TAG` to choose another image name, for example `make docker TAG=myminio:minio`.
+A plain `docker build -t myminio:minio .` works as well, but the binary then carries no version information.
 
 Use `docker image ls` to confirm the image exists in your local repository.
 You can run the server using standard Docker invocation:
@@ -121,7 +127,7 @@ See the [MinIO Container](https://docs.min.io/community/minio-object-store/opera
 There are two paths for installing MinIO onto Kubernetes infrastructure:
 
 - Use the [MinIO Operator](https://github.com/minio/operator)
-- Use the community-maintained [Helm charts](https://github.com/minio/minio/tree/master/helm/minio)
+- Use the community-maintained [Helm charts](https://github.com/pixel365/minio/tree/master/helm/minio)
 
 See the [MinIO Documentation](https://docs.min.io/community/minio-object-store/operations/deployments/kubernetes.html) for guidance on deploying using the Operator.
 The Community Helm chart has instructions in the folder-level README.
@@ -161,10 +167,10 @@ Follow the MinIO Client [Quickstart Guide](https://docs.min.io/community/minio-o
 
 ## Contribute to MinIO Project
 
-Please follow MinIO [Contributor's Guide](https://github.com/minio/minio/blob/master/CONTRIBUTING.md) for guidance on making new contributions to the repository.
+Please follow MinIO [Contributor's Guide](https://github.com/pixel365/minio/blob/master/CONTRIBUTING.md) for guidance on making new contributions to the repository.
 
 ## License
 
-- MinIO source is licensed under the [GNU AGPLv3](https://github.com/minio/minio/blob/master/LICENSE).
-- MinIO [documentation](https://github.com/minio/minio/tree/master/docs) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
-- [License Compliance](https://github.com/minio/minio/blob/master/COMPLIANCE.md)
+- MinIO source is licensed under the [GNU AGPLv3](https://github.com/pixel365/minio/blob/master/LICENSE).
+- MinIO [documentation](https://github.com/pixel365/minio/tree/master/docs) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+- [License Compliance](https://github.com/pixel365/minio/blob/master/COMPLIANCE.md)

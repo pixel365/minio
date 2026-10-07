@@ -16,6 +16,7 @@ DOCKER_OUTPUT ?= --load
 # mc shipped in the image and used by functional tests.
 MC_IMAGE ?= ghcr.io/pixel365/mc:RELEASE.2026-10-07T07-29-18Z
 
+GOLANGCI_VERSION ?= v2.14.0
 GOLANGCI_DIR = .bin/golangci/$(GOLANGCI_VERSION)
 GOLANGCI = $(GOLANGCI_DIR)/golangci-lint
 
@@ -30,7 +31,7 @@ help: ## print this help
 
 getdeps: ## fetch necessary dependencies
 	@mkdir -p ${GOPATH}/bin
-	@echo "Installing golangci-lint" && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(GOLANGCI_DIR)
+	@echo "Installing golangci-lint $(GOLANGCI_VERSION)" && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/$(GOLANGCI_VERSION)/install.sh | sh -s -- -b $(GOLANGCI_DIR) $(GOLANGCI_VERSION)
 
 crosscompile: ## cross compile minio
 	@(env bash $(PWD)/buildscripts/cross-compile.sh)
