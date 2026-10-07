@@ -35,6 +35,7 @@ import (
 	cr "github.com/minio/minio-go/v7/pkg/credentials"
 	"github.com/minio/minio-go/v7/pkg/set"
 	"github.com/minio/pkg/v3/ldap"
+	"github.com/minio/pkg/v3/policy"
 )
 
 func runAllIAMSTSTests(suite *TestSuiteIAM, c *check) {
@@ -1351,8 +1352,10 @@ func (s *TestSuiteIAM) TestIAMImport(c *check, exportedContent []byte, caseNum i
 	if err != nil {
 		c.Fatalf("import %d: Unable to list policies: %v", caseNum, err)
 	}
-	defaultCannedPolicies := set.CreateStringSet("consoleAdmin", "readwrite", "readonly",
-		"diagnostics", "writeonly")
+	defaultCannedPolicies := set.NewStringSet()
+	for _, p := range policy.DefaultPolicies {
+		defaultCannedPolicies.Add(p.Name)
+	}
 	for policy, policyBytes := range policyContentMap {
 		if defaultCannedPolicies.Contains(policy) {
 			continue
