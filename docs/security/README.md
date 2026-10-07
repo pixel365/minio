@@ -158,7 +158,7 @@ The MinIO server supports key rotation for SSE-S3 encrypted objects. The minio s
 5)  Store the encrypted OEK encrypted data key and master key ID in object metadata.
  ```
 
-Only the root/admin user can perform an SSE-S3 key rotation using the Admin-API via [mc](https://github.com/minio/mc). For more details about how to perform key management operations using the CLI refer to [mc admin guide](https://github.com/minio/mc/blob/master/docs/minio-admin-complete-guide.md) or run `mc admin kms key`.
+Only the root/admin user can perform an SSE-S3 key rotation using the Admin-API via [mc](https://github.com/pixel365/minio-mc). For more details about how to perform key management operations using the CLI refer to [mc admin guide](https://github.com/pixel365/minio-mc) or run `mc admin kms key`.
 
 #### Secure Erasure and Locking
 

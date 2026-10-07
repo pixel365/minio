@@ -9,8 +9,7 @@ pkill kes
 rm -rf /tmp/xl
 
 if [ ! -f ./mc ]; then
-	wget --quiet -O mc https://dl.minio.io/client/mc/release/linux-amd64/mc &&
-		chmod +x mc
+	make getmc
 fi
 
 if [ ! -f ./kes ]; then

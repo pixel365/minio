@@ -25,8 +25,7 @@ done
 sleep 10s
 
 if [ ! -f ./mc ]; then
-	wget --quiet -O ./mc https://dl.minio.io/client/mc/release/linux-amd64/./mc &&
-		chmod +x mc
+	make getmc
 fi
 
 set +e

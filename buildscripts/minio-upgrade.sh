@@ -65,7 +65,12 @@ __init__() {
 	export GOPATH=/tmp/gopath
 	export PATH=${PATH}:${GOPATH}/bin
 
-	go install github.com/minio/mc@latest
+	# mc comes from the fork release image, see `make getmc`.
+	if [ ! -x ./mc ]; then
+		make getmc
+	fi
+	mkdir -p "${GOPATH}"/bin
+	cp -a ./mc "${GOPATH}"/bin/mc
 
 	## this is needed because github actions don't have
 	## docker-compose on all runners

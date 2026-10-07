@@ -24,8 +24,8 @@ imagePullSecrets: []
 ## client used to create a default bucket).
 ##
 mcImage:
-  repository: quay.io/minio/mc
-  tag: RELEASE.2024-11-21T17-21-54Z
+  repository: ghcr.io/pixel365/mc
+  tag: RELEASE.2026-10-07T07-29-18Z
   pullPolicy: IfNotPresent
 
 ## minio mode, i.e. standalone or distributed

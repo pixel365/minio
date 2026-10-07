@@ -89,7 +89,7 @@ A job is the basic unit of work for MinIO Batch Job. A job is a self describing 
 Type describes the job type, such as replicating objects between MinIO sites. Each job performs a single type of operation across all objects that match the job description criteria.
 
 ## Batch Jobs via Commandline
-[mc](http://github.com/minio/mc) provides 'mc batch' command to create, start and manage submitted jobs.
+[mc](https://github.com/pixel365/minio-mc) provides 'mc batch' command to create, start and manage submitted jobs.
 
 ```
 NAME:

@@ -48,10 +48,7 @@ CI=on MINIO_KMS_SECRET_KEY=minio-default-key:IyqsU3kMFloCNup4BsZtf/rmfHVcTgznO2F
 echo "done"
 
 if [ ! -f ./mc ]; then
-	echo -n "Downloading MinIO client ..."
-	wget -O mc https://dl.min.io/client/mc/release/linux-amd64/mc &&
-		chmod +x mc
-	echo "done"
+	make getmc
 fi
 
 export MC_HOST_minio1=https://minio:minio123@localhost:9001

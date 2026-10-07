@@ -8,8 +8,13 @@ pkill minio
 pkill kes
 rm -rf /tmp/xl
 
-go install -v github.com/minio/mc@master
-cp -a $(go env GOPATH)/bin/mc ./mc
+# mc comes from the fork release image, see `make getmc`. The script calls
+# mc from PATH, so put it next to the other Go binaries.
+if [ ! -x ./mc ]; then
+	make getmc
+fi
+mkdir -p "$(go env GOPATH)/bin"
+cp -a ./mc "$(go env GOPATH)/bin/mc"
 
 if [ ! -f ./kes ]; then
 	wget --quiet -O kes https://github.com/minio/kes/releases/latest/download/kes-linux-amd64 &&

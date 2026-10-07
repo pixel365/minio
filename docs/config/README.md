@@ -189,7 +189,7 @@ notify_redis          publish bucket notifications to Redis datastores
 
 ### Accessing configuration
 
-All configuration changes can be made using [`mc admin config` get/set/reset/export/import commands](https://github.com/minio/mc/blob/master/docs/minio-admin-complete-guide.md).
+All configuration changes can be made using [`mc admin config` get/set/reset/export/import commands](https://github.com/pixel365/minio-mc).
 
 #### List all config keys available
 
