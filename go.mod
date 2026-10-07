@@ -274,3 +274,7 @@ require (
 	google.golang.org/grpc v1.72.0 // indirect
 	google.golang.org/protobuf v1.36.6 // indirect
 )
+
+replace github.com/minio/console => github.com/pixel365/minio-console v0.0.0-20250905210349-2017f33b26e1
+
+replace goftp.io/server/v2 => github.com/pixel365/goftp-server/v2 v2.0.1
