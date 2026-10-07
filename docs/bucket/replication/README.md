@@ -94,7 +94,7 @@ The access key provided for the replication *target* cluster should have these m
 }
 ```
 
-Please note that the permissions required by the admin user on the target cluster can be more fine grained to exclude permissions like "s3:ReplicateDelete", "s3:GetBucketObjectLockConfiguration" etc depending on whether delete replication rules are set up or if object locking is disabled on `destbucket`. The above policies assume that replication of objects, tags and delete marker replication are all enabled on object lock enabled buckets. A sample script to setup replication is provided [here](https://github.com/minio/minio/blob/master/docs/bucket/replication/setup_replication.sh)
+Please note that the permissions required by the admin user on the target cluster can be more fine grained to exclude permissions like "s3:ReplicateDelete", "s3:GetBucketObjectLockConfiguration" etc depending on whether delete replication rules are set up or if object locking is disabled on `destbucket`. The above policies assume that replication of objects, tags and delete marker replication are all enabled on object lock enabled buckets. A sample script to setup replication is provided [here](https://github.com/pixel365/minio/blob/master/docs/bucket/replication/setup_replication.sh)
 
 To set up replication from a source bucket `srcbucket` on myminio cluster to a bucket `destbucket` on the target minio cluster with endpoint https://replica-endpoint:9000, use:
 ```
@@ -161,9 +161,9 @@ Replication status can be seen in the metadata on the source and destination obj
 
 To perform bi-directional replication, repeat the above process on the target site - this time setting the source bucket as the replication target. It is recommended that replication be run in a system with at least two CPU's available to the process, so that replication can run in its own thread.
 
-![put](https://raw.githubusercontent.com/minio/minio/master/docs/bucket/replication/PUT_bucket_replication.png)
+![put](https://raw.githubusercontent.com/pixel365/minio/master/docs/bucket/replication/PUT_bucket_replication.png)
 
-![head](https://raw.githubusercontent.com/minio/minio/master/docs/bucket/replication/HEAD_bucket_replication.png)
+![head](https://raw.githubusercontent.com/pixel365/minio/master/docs/bucket/replication/HEAD_bucket_replication.png)
 
 ## Replica Modification sync
 
@@ -210,11 +210,11 @@ Also note that `mc` version `RELEASE.2021-09-02T09-21-27Z` or older supports onl
 
 Status of delete marker replication can be viewed by doing a GET/HEAD on the object version - it will return a `X-Minio-Replication-DeleteMarker-Status` header and http response code of `405`. In the case of permanent deletes, if the delete replication is pending or failed to propagate to the target cluster, GET/HEAD will return additional `X-Minio-Replication-Delete-Status` header and a http response code of `405`.
 
-![delete](https://raw.githubusercontent.com/minio/minio/master/docs/bucket/replication/DELETE_bucket_replication.png)
+![delete](https://raw.githubusercontent.com/pixel365/minio/master/docs/bucket/replication/DELETE_bucket_replication.png)
 
 The status of replication can be monitored by configuring event notifications on the source and target buckets using `mc event add`.On the source side, the `s3:PutObject`, `s3:Replication:OperationCompletedReplication` and `s3:Replication:OperationFailedReplication` events show the status of replication in the `X-Amz-Replication-Status` metadata.
 
-On the target bucket, `s3:PutObject` event shows `X-Amz-Replication-Status` status of `REPLICA` in the metadata. Additional metrics to monitor backlog state for the purpose of bandwidth management and resource allocation are exposed via Prometheus - see <https://github.com/minio/minio/blob/master/docs/metrics/prometheus/list.md> for more details.
+On the target bucket, `s3:PutObject` event shows `X-Amz-Replication-Status` status of `REPLICA` in the metadata. Additional metrics to monitor backlog state for the purpose of bandwidth management and resource allocation are exposed via Prometheus - see <https://github.com/pixel365/minio/blob/master/docs/metrics/prometheus/list.md> for more details.
 
 ### Sync/Async Replication
 
@@ -276,6 +276,6 @@ MinIO does not support SSE-C encrypted objects on replicated buckets, any applic
 
 ## Explore Further
 
-- [MinIO Bucket Replication Design](https://github.com/minio/minio/blob/master/docs/bucket/replication/DESIGN.md)
+- [MinIO Bucket Replication Design](https://github.com/pixel365/minio/blob/master/docs/bucket/replication/DESIGN.md)
 - [MinIO Bucket Versioning Implementation](https://docs.min.io/community/minio-object-store/administration/object-management/object-retention.html)
 - [MinIO Client Quickstart Guide](https://docs.min.io/community/minio-object-store/reference/minio-mc.html#quickstart)
