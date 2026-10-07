@@ -16,6 +16,8 @@ replace github.com/minio/mc => github.com/pixel365/minio-mc v0.0.0-2026100707253
 
 replace github.com/pgsty/silo-pkg/v3 => github.com/pixel365/minio-pkg/v3 v3.14.1
 
+replace github.com/coreos/go-systemd/v22 => github.com/coreos/go-systemd/v22 v22.6.0
+
 require (
 	aead.dev/mtls v0.2.1
 	cloud.google.com/go/storage v1.56.0
