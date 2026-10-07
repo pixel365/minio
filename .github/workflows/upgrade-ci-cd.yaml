@@ -1,9 +1,9 @@
 name: Upgrade old version tests
 
+# Disabled: buildscripts/minio-upgrade.sh starts from the upstream image
+# minio/minio:RELEASE.2019-12-19T22-52-26Z, which is no longer published.
 on:
-  pull_request:
-    branches:
-      - master
+  workflow_dispatch:
 
 # This ensures that previous jobs for the PR are canceled when the PR is
 # updated.
