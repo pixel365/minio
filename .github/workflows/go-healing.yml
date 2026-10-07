@@ -43,4 +43,5 @@ jobs:
           make verify-healing
           make verify-healing-inconsistent-versions
           make verify-healing-with-root-disks
-          make verify-healing-with-rewrite
+          # verify-healing-with-rewrite needs the RELEASE.2020-10-28T08-16-50Z
+          # binary from dl.min.io, which no longer exists.

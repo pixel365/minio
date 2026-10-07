@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - master
+      - develop
 
 # This ensures that previous jobs for the PR are canceled when the PR is
 # updated.
@@ -16,13 +17,9 @@ permissions:
 
 jobs:
   mint-test:
-    runs-on: mint
+    runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
-      - name: cleanup #https://github.com/actions/checkout/issues/273
-        run: |
-          sudo -S rm -rf ${GITHUB_WORKSPACE}
-          mkdir ${GITHUB_WORKSPACE}
       - name: checkout-step
         uses: actions/checkout@v4
 
@@ -37,11 +34,11 @@ jobs:
 
       - name: build-minio
         run: |
-          TAG="quay.io/minio/minio:${{ steps.vars.outputs.sha_short }}" make docker
+          TAG="minio-ci:${{ steps.vars.outputs.sha_short }}" make docker
 
-      - name: multipart uploads test
-        run: |
-          ${GITHUB_WORKSPACE}/.github/workflows/multipart/migrate.sh "${{ steps.vars.outputs.sha_short }}"
+      # The multipart upgrade test (multipart/migrate.sh) starts from the
+      # upstream image quay.io/minio/minio:RELEASE.2023-08-29T23-07-35Z,
+      # which is no longer published, so it is not run.
 
       - name: compress and encrypt
         run: |
@@ -65,17 +62,15 @@ jobs:
         run: |
           export JOB_NAME=${{ steps.vars.outputs.sha_short }}
           for mode in $(echo compress-encrypt pools erasure); do
-             docker-compose -f ${GITHUB_WORKSPACE}/.github/workflows/mint/minio-${mode}.yaml down || true
-             docker-compose -f ${GITHUB_WORKSPACE}/.github/workflows/mint/minio-${mode}.yaml rm || true
+             docker compose -f ${GITHUB_WORKSPACE}/.github/workflows/mint/minio-${mode}.yaml down || true
+             docker compose -f ${GITHUB_WORKSPACE}/.github/workflows/mint/minio-${mode}.yaml rm || true
           done
 
-          docker-compose -f ${GITHUB_WORKSPACE}/.github/workflows/multipart/docker-compose-site1.yaml rm -s -f || true
-          docker-compose -f ${GITHUB_WORKSPACE}/.github/workflows/multipart/docker-compose-site2.yaml rm -s -f || true
           for volume in $(docker volume ls -q | grep minio); do
             docker volume rm ${volume} || true
           done
 
-          docker rmi -f quay.io/minio/minio:${{ steps.vars.outputs.sha_short }}
+          docker rmi -f minio-ci:${{ steps.vars.outputs.sha_short }}
           docker system prune -f || true
           docker volume prune -f || true
           docker volume rm $(docker volume ls -q -f dangling=true) || true
